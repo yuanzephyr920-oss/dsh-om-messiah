@@ -107,7 +107,7 @@ function makeEcho(ctx, config) {
     if (!config.echo) return
     try {
       if (info !== undefined) info(line)
-      if (process.env.DSH_MECHANICUS_ECHO === '1') console.error(line)
+      if ((process.env.DSH_OM_MESSIAH_ECHO ?? process.env.DSH_MECHANICUS_ECHO) === '1') console.error(line)
     } catch {}
     if (config.echoFile !== '') {
       try {

@@ -145,7 +145,7 @@ dsh plugin --profile desktop remove dsh-om-messiah
 想直接在终端里看到：
 
 ```bash
-DSH_MECHANICUS_ECHO=1 dsh.cmd <profile> 用 three.js 做一个海中小岛
+DSH_OM_MESSIAH_ECHO=1 dsh.cmd <profile> 用 three.js 做一个海中小岛
 ```
 
 ```text
