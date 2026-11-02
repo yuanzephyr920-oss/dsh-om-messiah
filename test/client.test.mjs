@@ -103,6 +103,80 @@ test('apply registers exactly one settings.section page', async () => {
   assert.equal(tree.props['data-mk-page'], '')
 })
 
+test('the settings panel renders with a loaded config (guards against runtime ReferenceErrors)', async () => {
+  const source = await readFile(new URL('../client.js', import.meta.url), 'utf8')
+  const form = {
+    enabled: true,
+    echo: true,
+    devoutCoda: true,
+    rewrapAlreadyStyled: false,
+    intensity: 'medium',
+    quoteStyle: 'quote',
+    echoFile: '',
+    maxChars: 20000,
+    askChoice: true,
+    choiceTimeoutMs: 90000,
+    choiceFallback: 'prayer',
+    address: '',
+    selfDesc: '',
+    praise: '',
+    wishLead: '',
+    closing: '',
+  }
+  let firstHook = true
+  const reactWithForm = {
+    ...React,
+    useState(initial) {
+      const value = firstHook ? form : typeof initial === 'function' ? initial() : initial
+      firstHook = false
+      return [value, () => {}]
+    },
+  }
+  let bundle
+  const style = { setAttribute() {}, textContent: '' }
+  const context = {
+    window: { __ModuleLoader__: { load(definition) { bundle = definition } } },
+    document: { createElement: () => style, head: { appendChild() {} } },
+    fetch: async () => { throw new Error('no network in tests') },
+    require: (id) => {
+      assert.equal(id, 'react')
+      return reactWithForm
+    },
+    console,
+  }
+  vm.createContext(context)
+  vm.runInContext(source, context, { filename: 'client.js' })
+
+  const half = bundle.factory(() => reactWithForm)
+  let registered
+  half.apply({
+    get: (key) =>
+      key === 'slots'
+        ? { inject: (_name, cb) => cb(), register: (definition, component) => { registered = { definition, component } } }
+        : undefined,
+    effect(fn) { fn(); return () => {} },
+  })
+
+  const element = registered.component()
+  const tree = element.type(element.props)
+
+  const texts = []
+  const walk = (node, depth = 0) => {
+    if (node == null || depth > 40) return
+    if (typeof node === 'string' || typeof node === 'number') { texts.push(String(node)); return }
+    if (typeof node !== 'object') return
+    // plain function components (Switch, Field, …) are rendered by React, so call them here
+    if (typeof node.type === 'function') { walk(node.type(node.props ?? {}), depth + 1); return }
+    for (const child of node.children ?? []) walk(child, depth + 1)
+  }
+  walk(tree)
+  const flat = texts.join(String.fromCharCode(10))
+  assert.match(flat, /总开关/)
+  assert.match(flat, /许愿段加一句虔诚收束/)
+  assert.match(flat, /强制重包已是祷文的输入/)
+  assert.match(flat, /发送前确认/)
+})
+
 /** Pull the plugin's inline CSS back out of the bundle source. */
 async function readCss() {
   const source = await readFile(new URL('../client.js', import.meta.url), 'utf8')
