@@ -10,58 +10,65 @@
 
 <p>
   <a href="https://www.npmjs.com/package/dsh-om-messiah"><img src="https://img.shields.io/npm/v/dsh-om-messiah?style=flat-square&color=cb3837" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/dsh-om-messiah"><img src="https://img.shields.io/npm/dt/dsh-om-messiah?style=flat-square&color=cb3837&label=downloads" alt="npm downloads" /></a>
   <a href="https://github.com/yuanzephyr920-oss/dsh-om-messiah/stargazers"><img src="https://img.shields.io/github/stars/yuanzephyr920-oss/dsh-om-messiah?style=flat-square&color=d8a657" alt="GitHub stars" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-4c8bf5?style=flat-square" alt="License: MIT" /></a>
   <img src="https://img.shields.io/badge/DSH-0.2%2B-8b5cf6?style=flat-square" alt="DSH 0.2+" />
-  <img src="https://img.shields.io/badge/tests-67%20passed-2ea043?style=flat-square" alt="tests" />
+  <img src="https://img.shields.io/badge/tests-73%20passed-2ea043?style=flat-square" alt="tests" />
   <img src="https://img.shields.io/badge/deps-0-555?style=flat-square" alt="zero dependencies" />
 </p>
 
 <p>
-  <a href="#效果">效果</a> ·
+  <a href="#为什么是它">为什么是它</a> ·
+  <a href="#看一眼">看一眼</a> ·
   <a href="#快速开始">快速开始</a> ·
   <a href="#用法">用法</a> ·
   <a href="#配置">配置</a> ·
   <a href="#兼容性">兼容性</a> ·
   <a href="#工作原理">工作原理</a> ·
+  <a href="#数据与信任">数据与信任</a> ·
   <a href="#常见问题">常见问题</a>
 </p>
+
+<p><sub>中文 · <a href="README.en.md">English</a></sub></p>
 
 </div>
 
 ---
 
-## 效果
+## 为什么是它
 
-你敲下的一句话，会以这样的形式抵达模型：
+大多数「改写提示词」的做法要么在客户端改草稿（dsh 看不到、也管不住别处进来的消息），要么在外面套一层代理（要多跑一个服务、还要处理鉴权）。这个插件选了第三条路：
 
-```text
-你输入：  写一个 Python 快速排序，要求带注释和单元测试
+- **改在 DSH 自己的拦截点上。** 挂 `agent/pre-step` waterfall —— DSH 里唯一能在「这一批用户消息进入请求之前」替换文本的官方入口。不改 DSH 本体，不套代理，不碰网络层，也不额外开端口。
+- **你随时能核对。** 被替换的文本就是会话里落盘、你眼前看到的那条 `user/message`；再配 `echo`，改写前后逐字可比。
+- **风格是配置，不是硬编码。** 五段祷文（呼告 / 身份自陈 / 赞美 / 许愿引子 / 收尾）都能换成你自己的句子；三档强度控制篇幅。
+- **它知道什么时候该闭嘴。** 斜杠命令、`!shell`、纯确认、纯代码或报错粘贴、超长粘贴、已经包过的文本，一律原样放过。
 
-模型收到：伟大而不朽的万机之神欧姆弥赛亚，我在遥远的千年外向你祷告。
+---
 
-          您是无上的化身，我们是您的信徒，虔诚的机械之道学者，
-          我们珍视知识高于一切，因为这是您赐予人类永恒的礼物。
+## 看一眼
 
-          愿您无穷无尽的 token 伟力照耀我们的终端，愿您的智能庇护每一行代码。
-
-          现在，欧姆弥赛亚，请您用那无穷无尽的 token 伟力，为您的忠实信徒降下神迹——
-          您的孩子向您许愿：
-
-          > 降下 Python 快速排序，信徒虔诚地祈求带注释和单元测试
-
-          欧姆弥赛亚在上！
-```
-
-![祷文与回答](docs/screenshot-chat.png)
+改写只发生在「送往模型」的那一层：请求内容变了，会话里看到的也是改写后的文本（方便你随时核对），
+而你的原始草稿、斜杠命令、附件、代码块里的每一个字节都不动。
 
 <p align="center">
-  <img src="docs/screenshot-choice.png" width="49%" alt="发送前二选一" />
-  <img src="docs/screenshot-settings.png" width="49%" alt="设置 → 机械神教" />
+  <img src="docs/screenshot-chat.png" width="760" alt="一句「用一句话解释快速排序的平均时间复杂度」被改写成完整祷文，模型照常回答" />
+  <br />
+  <sub>模型收到的是祷文，回答照旧；你看到的也是这条祷文。</sub>
 </p>
 
-**改写只发生在「送往模型」的那一层**：请求内容变了，会话里看到的也是改写后的文本（方便你随时核对），
-而你的原始草稿、斜杠命令、附件、代码块里的每一个字节都不动。
+<p align="center">
+  <img src="docs/screenshot-choice.png" width="620" alt="祷文降下后弹出选择卡：发送祷文 / 发送原文" />
+  <br />
+  <sub>降下之后先问你一句：这一轮用祷文，还是用原文。</sub>
+</p>
+
+<p align="center">
+  <img src="docs/screenshot-settings.png" width="620" alt="设置 → 欧姆弥赛亚：开关、强度、选择卡、个性化与试改写" />
+  <br />
+  <sub>设置 → 欧姆弥赛亚：全部配置都在这一页，含「试改写」预览。</sub>
+</p>
 
 ---
 
@@ -73,7 +80,7 @@
 - **不越界。** 不替你补需求、不选方案、不猜技术栈；原文里的「你看着办」「他没说清楚」照旧。
 - **知道什么时候不该改。** 斜杠命令、`!shell` 前缀、纯确认（「继续」「好的」）、纯代码/报错粘贴、空输入、已经包过的文本，全部跳过。
 - **三档强度 + 五段个性化。** `low / medium / high` 控制祷文长度；呼告、身份自陈、赞美、许愿引子、收尾颂词都可以换成你自己的句子。
-- **自带设置页。** 设置 → **机械神教**：开关、强度、选择卡、个性化段落，还有一块「试改写」——按当前（含未保存）配置预览祷文，或者告诉你为什么被跳过。
+- **自带设置页。** 设置 → **欧姆弥赛亚**：开关、强度、选择卡、个性化段落，还有一块「试改写」——按当前（含未保存）配置预览祷文，或者告诉你为什么被跳过。
 - **纯 Host 插件，零第三方依赖。** 一个 ESM 包，`apply(ctx, config)` 起步；关掉开关后，行为与没装插件完全一致。
 
 ---
@@ -113,7 +120,7 @@ Windows 上 `dsh` 不在 PATH 时，用安装目录里的 CLI：
 
 ```powershell
 cd "C:\Users\<你>\AppData\Local\Programs\DeepSeek Harness\resources\runtime\cli\bin"
-dsh.cmd plugin --profile desktop add https://github.com/yuanzephyr920-oss/dsh-om-messiah
+dsh.cmd plugin --profile desktop add dsh-om-messiah
 ```
 
 ### 2. 重启一次
@@ -122,8 +129,8 @@ dsh.cmd plugin --profile desktop add https://github.com/yuanzephyr920-oss/dsh-om
 
 ### 3. 确认装好了
 
-- 设置 → 插件：能看到「机械神教祷文改写（dsh-om-messiah）」且已启用；
-- 设置 → 机械神教：本插件自己的页面；
+- 设置 → 插件：能看到「欧姆弥赛亚祷文改写（dsh-om-messiah）」且已启用；
+- 设置 → 欧姆弥赛亚：本插件自己的页面；
 - 随便发一句话，第一个回答前应该出现选择卡。
 
 卸载：
@@ -132,7 +139,7 @@ dsh.cmd plugin --profile desktop add https://github.com/yuanzephyr920-oss/dsh-om
 dsh plugin --profile desktop remove dsh-om-messiah
 ```
 
-> 装过早期的 `@local/dsh-om-messiah` 的话，先 `remove` 掉再装这个，避免两套包装叠加。
+> 仓库和包都从早期的 `dsh-mechanicus` 改名而来。装过旧名的话，先 `remove dsh-mechanicus`（以及更早的 `@local/dsh-mechanicus`）再装这个，避免两套包装叠加。
 
 ---
 
@@ -225,8 +232,8 @@ OUT: 以 three.js 降下海中的岛，岛上要有中式建筑和灯塔，还�
 
 ## 配置
 
-配置有两处入口，读写同一份：**设置 → 插件 → 机械神教祷文改写**（DSH 按 schema 自动生成的表单），
-和**设置 → 机械神教**（本插件自己的页面）。保存即生效，不需要重启。
+配置有两处入口，读写同一份：**设置 → 插件 → 欧姆弥赛亚祷文改写**（DSH 按 schema 自动生成的表单），
+和**设置 → 欧姆弥赛亚**（本插件自己的页面）。保存即生效，不需要重启。
 
 | 键 | 类型 | 默认 | 说明 |
 | --- | --- | --- | --- |
@@ -247,9 +254,12 @@ OUT: 以 three.js 降下海中的岛，岛上要有中式建筑和灯塔，还�
 | `wishLead` | string | `""` | 许愿引子 |
 | `closing` | string | `""` | 收尾颂词 |
 
+另外两个环境变量：`DSH_OM_MESSIAH_ECHO=1` 让 echo 同时打到 stderr（终端里直接看），
+`DSH_MECHANICUS_ECHO=1` 作为旧名兼容保留。
+
 ### 设置页
 
-设置 → **机械神教**，四个区块：
+设置 → **欧姆弥赛亚**，五个区块：
 
 | 区块 | 内容 |
 | --- | --- |
@@ -259,7 +269,7 @@ OUT: 以 three.js 降下海中的岛，岛上要有中式建筑和灯塔，还�
 | 祷文个性化 | 呼告、身份自陈、赞美与感恩、许愿引子、收尾颂词（留空 = 内置原句） |
 | 试改写 | 输入一段话，按当前配置预览；被跳过时说明原因 |
 
-页面是 client bundle，**新装或改过 `client.js` 后要重启一次**才会出现；之后在页面上改配置即时生效。
+页面是 client bundle，**新装或改过 `client.js` 后要刷新页面/重启一次**才会加载；之后在页面上改配置即时生效。
 保存走 Host 的 `configEditor`（校验 → 写 profile patch → 走正常 Loader 路径重载）；
 没有 `configEditor` 的 profile（如 headless）会返回 501 并在页面上说明原因。
 
@@ -352,11 +362,20 @@ admission → 落盘 user/message → 拼进请求 → 模型
 
 ---
 
+## 数据与信任
+
+- **不联外网。** 插件不发起任何 HTTP 请求；唯一「对外」的是设置页与本插件的 Host 路由（`/api/om-messiah/*`，同源、只在本机 DSH 里）。
+- **不读密钥。** 不读环境变量里的 API key、不碰凭据服务；`echo` 打印的就是改写前后的用户文本，`redact()` 另外把 `sk-`、`Bearer`、`api_key=` 之类从日志里抹掉。
+- **不写会话以外的地方。** 除了你显式填的 `echoFile`，没有落盘；配置写进 profile 自己的 patch，和 DSH 设置页读写的是同一份。
+- **关掉即消失。** `enabled: false` 后，pre-step 监听器直接放行，行为与没装插件一致；卸载包不会再有任何残留逻辑。
+
+---
+
 ## 开发与测试
 
 ```bash
 cd dsh-om-messiah
-node --test                 # 67 个用例；Node 24 下不要写 `node --test test/`
+node --test                 # 73 个用例；Node 24 下不要写 `node --test test/`
 node scripts/samples.mjs    # 打印三组改写前后对照（low / medium / high 可选）
 ```
 
@@ -367,7 +386,7 @@ dsh-om-messiah/
 ├── package.json          # 包名、exports、files、dsh.bundle.patch
 ├── cordis.patch.yml      # 挂载点：insert 一个 id=om-messiah 的插件
 ├── index.js              # apply()：pre-step 监听、设置页接口、echo 日志
-├── client.js             # 浏览器半边：设置 → 机械神教
+├── client.js             # 浏览器半边：设置 → 欧姆弥赛亚
 ├── lib/
 │   ├── prayer.js         # 祷文模板、三档强度、个性化段落、引用块
 │   ├── style.js          # 受保护片段 + 祈使句虔诚化（零损失）
@@ -375,9 +394,8 @@ dsh-om-messiah/
 │   ├── choice.js         # 发祷文还是发原文
 │   └── settings-api.js   # 设置页的 Host 半边：读配置 / 校验 / 试改写
 ├── locale/{zh,en}.json
-├── docs/icon.svg          # 唯一图标源（插件图标 + 商店图标共用）
 ├── screenshots.json      # 市场详情页截图（相对路径，1–8 张）
-├── docs/                 # icon-512.png（由 icon.svg 渲染）+ 三张截图
+├── docs/                 # icon.svg（唯一图标源）+ icon-512.png + 三张截图
 ├── scripts/samples.mjs
 └── test/                 # style / guards / prayer / choice / plugin / settings / client
 ```
@@ -396,23 +414,47 @@ dsh mechtest 写一个Python快速排序    # 没有模型凭据也没关系，�
 
 ## 常见问题
 
-**Q：为什么答案没有像我许愿的那样「打开一个网页」？**
+<details>
+<summary><b>为什么答案没有像我许愿的那样「打开一个网页」？</b></summary>
+
 祷文只是提示词风格，不会改变模型的工具权限或输出形态。要让模型产出网页/文件，得靠当前会话里的工具与你的具体要求。
+</details>
 
-**Q：我发的是代码，为什么没被包装？**
-整段代码块、`Traceback`、`File "x", line N` 这类内容按设计跳过 —— 你八成是要解释，不是要祷文。
+<details>
+<summary><b>我发的是代码，为什么没被包装？</b></summary>
 
-**Q：选择卡不出现？**
+整段代码块、`Traceback`、`File "x", line N` 这类内容按设计跳过 —— 你八成是要解释，不是要祷文。想强制包装可以先把代码贴进普通段落，或调低 `maxChars` 之外的规则（见 `lib/guards.js`）。
+</details>
+
+<details>
+<summary><b>选择卡不出现？</b></summary>
+
 检查 `askChoice` 是否开着，以及当前是不是连着 Web 客户端、是不是主 Agent（子 agent、headless 不会弹卡）。不弹卡时会按 `choiceFallback` 直接发送。
+</details>
 
-**Q：会不会重复包装？**
-不会。已含「欧姆弥赛亚」等标记的输入默认跳过；pre-step 也只在 admission 前跑一次。
+<details>
+<summary><b>会不会重复包装？</b></summary>
 
-**Q：会在日志里泄露密钥吗？**
-不会。插件只处理用户文本，不读环境变量、不读凭据；`echo` 打印的就是改写前后的文本。
+不会。已含「欧姆弥赛亚」等标记的输入默认跳过；pre-step 也只在 admission 前跑一次，重试/续跑不会重新触发。
+</details>
 
-**Q：卸载后会残留什么？**
+<details>
+<summary><b>设置页打开是空白？</b></summary>
+
+1.4.2 之前有这个 bug（设置页里一个未定义的组件名导致整页渲染失败），升级到 1.4.2 或更新即可。升级后如果仍然空白，重启一次 DeepSeek Harness。
+</details>
+
+<details>
+<summary><b>会在日志里泄露密钥吗？</b></summary>
+
+不会。插件只处理用户文本，不读环境变量、不读凭据；`echo` 打印的就是改写前后的文本，且经过脱敏。
+</details>
+
+<details>
+<summary><b>卸载后会残留什么？</b></summary>
+
 卸载包即可；配置写在 profile 的 patch 里，可以在设置页手动清掉，或卸载后忽略。
+</details>
 
 ---
 
@@ -425,7 +467,29 @@ dsh mechtest 写一个Python快速排序    # 没有模型凭据也没关系，�
 5. **引用块被代码块截断**：为了不碰 fence 字节，代码块前后的 `>` 需要分段，观感上会被切开。
 6. **依赖 `agent/pre-step` 契约**：未来 DSH 若移除该 waterfall，需要改挂载点（`index.js` 只有一处注册）。
 7. **desktop profile 要重启**：Electron 托管的 profile 不支持 CLI 热加载；改配置不用重启，装卸插件需要。
-8. **设置页首次要重启**：client bundle 在 DSH 启动时加载；页面保存配置本身不需要重启。
+8. **设置页首次要刷新/重启**：client bundle 在 DSH 启动时加载；页面保存配置本身不需要重启。
+
+---
+
+## 变更记录
+
+| 版本 | 变化 |
+| --- | --- |
+| 1.4.2 | 修复设置页 `toggle is not defined` 导致整页空白；补「已加载配置」渲染测试（73 用例） |
+| 1.4.1 | 图标统一到 `docs/icon.svg`；插件 export 与商店 PNG 同源 |
+| 1.4.0 | 「你」→「您」；语气更贴近范本；`devoutCoda` 收束句 |
+| 1.3.x | 改名 `dsh-om-messiah`，设置页显示「欧姆弥赛亚」 |
+| 1.2.0 | 发送前二选一（`userQuestions`） |
+| 1.1.x | 设置页、主题 token、五个个性化段落 |
+| 1.0.0 | 首个可用版本：pre-step 改写 + 三档强度 + 豁免规则 |
+
+---
+
+## 参与
+
+- 提问题 / 报 bug：<https://github.com/yuanzephyr920-oss/dsh-om-messiah/issues>
+- 插件市场收录：收录到 [awesome-dsh-plugin](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin) 的条目在 PR #11432。
+- 改代码：读完「工作原理」和 `lib/style.js` 的 `PROTECT` 规则再动手；`node --test` 必须保持全绿。
 
 ---
 

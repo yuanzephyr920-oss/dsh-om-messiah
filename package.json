@@ -1,6 +1,6 @@
 {
   "name": "dsh-om-messiah",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "type": "module",
   "description": "Rewrite every prompt into an Om Messiah prayer before it reaches the model, then choose prayer or original to send. Ships a Settings page.",
   "exports": {
@@ -20,6 +20,7 @@
     "docs/*.png",
     "docs/*.svg",
     "README.md",
+    "README.en.md",
     "LICENSE"
   ],
   "scripts": {
