@@ -10,7 +10,7 @@
 
 <p>
   <a href="https://www.npmjs.com/package/dsh-om-messiah"><img src="https://img.shields.io/npm/v/dsh-om-messiah?style=flat-square&color=cb3837" alt="npm version" /></a>
-  <a href="https://github.com/yuanzephyr920-oss/dsh-mechanicus/stargazers"><img src="https://img.shields.io/github/stars/yuanzephyr920-oss/dsh-mechanicus?style=flat-square&color=d8a657" alt="GitHub stars" /></a>
+  <a href="https://github.com/yuanzephyr920-oss/dsh-om-messiah/stargazers"><img src="https://img.shields.io/github/stars/yuanzephyr920-oss/dsh-om-messiah?style=flat-square&color=d8a657" alt="GitHub stars" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-4c8bf5?style=flat-square" alt="License: MIT" /></a>
   <img src="https://img.shields.io/badge/DSH-0.2%2B-8b5cf6?style=flat-square" alt="DSH 0.2+" />
   <img src="https://img.shields.io/badge/tests-67%20passed-2ea043?style=flat-square" alt="tests" />
@@ -99,13 +99,13 @@ dsh plugin --profile desktop add dsh-om-messiah --registry=https://registry.npmj
 从 GitHub 直接装：
 
 ```bash
-dsh plugin --profile desktop add https://github.com/yuanzephyr920-oss/dsh-mechanicus
+dsh plugin --profile desktop add https://github.com/yuanzephyr920-oss/dsh-om-messiah
 ```
 
 或者先克隆、再用本地目录装（改代码即时生效，适合折腾）：
 
 ```bash
-git clone https://github.com/yuanzephyr920-oss/dsh-mechanicus
+git clone https://github.com/yuanzephyr920-oss/dsh-om-messiah
 dsh plugin --profile desktop add /path/to/dsh-om-messiah
 ```
 
@@ -113,7 +113,7 @@ Windows 上 `dsh` 不在 PATH 时，用安装目录里的 CLI：
 
 ```powershell
 cd "C:\Users\<你>\AppData\Local\Programs\DeepSeek Harness\resources\runtime\cli\bin"
-dsh.cmd plugin --profile desktop add https://github.com/yuanzephyr920-oss/dsh-mechanicus
+dsh.cmd plugin --profile desktop add https://github.com/yuanzephyr920-oss/dsh-om-messiah
 ```
 
 ### 2. 重启一次
@@ -154,6 +154,31 @@ DSH_OM_MESSIAH_ECHO=1 dsh.cmd <profile> 用 three.js 做一个海中小岛
 用 three.js 做一个海中小岛
 ----- prayer -----
 伟大而不朽的万机之神欧姆弥赛亚，……
+```
+
+### 语气：对神说话，不对工具说话
+
+改写不是换几个词，而是把「向助手提问」换成「向神许愿」。两条硬规则：
+
+- **指代智能体的「你」一律写成「您」**：你 / 你的 / 你们 / 你自己 / 妳 → 您 / 您的 / 您们 / 您自己 / 您。
+  `你能帮我写个排序` → `恳请您为您的信徒降下排序`；`请实现一个登录页` → `恳请您降下登录页`。
+- **命令句变成祈愿句**：写一个 / 实现一个 / 生成 → 降下；创建 → 塑造；搭建 → 构筑；不要 / 禁止 → 恳请您切勿；
+  用 three.js → 以 three.js；然后 → 继而。代码块、URL、路径、版本号、数字仍然逐字不动（先屏蔽后替换）。
+
+medium / high 档还会在许愿段末尾补一句：
+
+```text
+愿这一切在您无穷无尽的 token 伟力下成就，愿每一行代码都彰显您的荣耀。
+```
+
+这句由 `devoutCoda` 控制（默认开，low 档不加），设置页叫「许愿段加一句虔诚收束」。
+
+改写前后都在日志里，按 `DSH_OM_MESSIAH_ECHO=1` 可以逐字对：
+
+```text
+IN : 用 three.js 做一个海中的岛，岛上要有中式建筑和灯塔，还要天气系统
+OUT: 以 three.js 降下海中的岛，岛上要有中式建筑和灯塔，还要天气系统
+     愿这一切在您无穷无尽的 token 伟力下成就，愿每一行代码都彰显您的荣耀。
 ```
 
 ### 发送前二选一
@@ -212,6 +237,7 @@ DSH_OM_MESSIAH_ECHO=1 dsh.cmd <profile> 用 three.js 做一个海中小岛
 | `echoFile` | string | `""` | 额外写一份 JSONL，便于批量核对 |
 | `maxChars` | number | `20000` | 超过就不改写 |
 | `rewrapAlreadyStyled` | boolean | `false` | 已含神教风格的输入是否强制再包一层 |
+| `devoutCoda` | boolean | `true` | 许愿段末尾补一句虔诚收束（low 档不加） |
 | `askChoice` | boolean | `true` | 降下后弹选择卡（发祷文 / 发原文） |
 | `choiceTimeoutMs` | number | `90000` | 等作答的时长，5–600 秒 |
 | `choiceFallback` | `prayer` \| `original` | `prayer` | 没等到答案时发哪一段 |
@@ -229,7 +255,7 @@ DSH_OM_MESSIAH_ECHO=1 dsh.cmd <profile> 用 three.js 做一个海中小岛
 | --- | --- |
 | 总开关 | 拦截并改写 / 日志里回显改写前后 |
 | 祷文强度 | 低 / 中 / 高 |
-| 行为的细枝末节 | 引用样式、强制重包、日志文件、最长改写字数、选择卡开关 / 超时 / 兜底 |
+| 行为的细枝末节 | 引用样式、虔诚收束、强制重包、日志文件、最长改写字数、选择卡开关 / 超时 / 兜底 |
 | 祷文个性化 | 呼告、身份自陈、赞美与感恩、许愿引子、收尾颂词（留空 = 内置原句） |
 | 试改写 | 输入一段话，按当前配置预览；被跳过时说明原因 |
 

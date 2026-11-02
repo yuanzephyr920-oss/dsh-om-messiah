@@ -1,6 +1,6 @@
 {
   "name": "dsh-om-messiah",
-  "version": "1.3.1",
+  "version": "1.4.0",
   "type": "module",
   "description": "Rewrite every prompt into an Om Messiah prayer before it reaches the model, then choose prayer or original to send. Ships a Settings page.",
   "exports": {
@@ -50,13 +50,13 @@
   ],
   "author": "yuanzephyr920-oss",
   "license": "MIT",
-  "homepage": "https://github.com/yuanzephyr920-oss/dsh-mechanicus#readme",
+  "homepage": "https://github.com/yuanzephyr920-oss/dsh-om-messiah#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yuanzephyr920-oss/dsh-mechanicus.git"
+    "url": "git+https://github.com/yuanzephyr920-oss/dsh-om-messiah.git"
   },
   "bugs": {
-    "url": "https://github.com/yuanzephyr920-oss/dsh-mechanicus/issues"
+    "url": "https://github.com/yuanzephyr920-oss/dsh-om-messiah/issues"
   },
   "engines": {
     "node": ">=20"

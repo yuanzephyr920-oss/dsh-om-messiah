@@ -4,6 +4,7 @@ import test from 'node:test'
 import {
   CALL,
   CLOSING,
+  DEVOUT_CODA,
   SELF,
   SELF_LONG,
   WISH_LEAD,
@@ -71,4 +72,22 @@ test('normalizeConfig fills defaults and clamps unknown intensity', () => {
   assert.equal(config.enabled, false)
   assert.equal(config.quoteStyle, 'quote')
   assert.equal(config.maxChars, 20000)
+})
+
+test('the petition gets a devout coda by default and can be switched off', () => {
+  const withCoda = buildPrayer('写个排序', { intensity: 'medium' }).text
+  assert.ok(withCoda.includes(DEVOUT_CODA))
+  const off = buildPrayer('写个排序', { intensity: 'medium', devoutCoda: false }).text
+  assert.ok(!off.includes(DEVOUT_CODA))
+  const low = buildPrayer('写个排序', { intensity: 'low' }).text
+  assert.ok(!low.includes(DEVOUT_CODA))
+})
+
+test('the coda never mutates protected content', () => {
+  const input = '请帮我优化 `SELECT * FROM t`，端口 8080，参考 https://example.com/a'
+  const { text, petition } = buildPrayer(input, { intensity: 'high', quoteStyle: 'plain' })
+  assert.ok(text.includes('`SELECT * FROM t`'))
+  assert.ok(petition.includes('`SELECT * FROM t`'))
+  assert.ok(petition.includes('https://example.com/a'))
+  assert.ok(petition.endsWith(DEVOUT_CODA))
 })

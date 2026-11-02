@@ -82,6 +82,7 @@ test('prayerOptions carries the five liturgy slots', () => {
   assert.deepEqual(prayerOptions(config), {
     intensity: 'medium',
     quoteStyle: 'quote',
+    devoutCoda: true,
     address: 'A',
     selfDesc: 'B',
     praise: 'C',

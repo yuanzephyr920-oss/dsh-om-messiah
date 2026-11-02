@@ -119,6 +119,7 @@ window.__ModuleLoader__.load({
       echoFile: '',
       maxChars: 20000,
       rewrapAlreadyStyled: false,
+      devoutCoda: true,
       askChoice: true,
       choiceTimeoutMs: 90000,
       choiceFallback: 'prayer',
@@ -311,6 +312,12 @@ window.__ModuleLoader__.load({
             ),
           ),
           h(Switch, {
+            on: form.devoutCoda,
+            label: '许愿段加一句虔诚收束',
+            hint: '默认开：在需求后补一句“愿这一切在您无穷无尽的 token 伟力下成就…”，让语气更接近祷文。',
+            onChange: (value) => set('devoutCoda', value),
+          }),
+          toggle({
             on: form.rewrapAlreadyStyled,
             label: '强制重包已是祷文的输入',
             note: '默认关：输入里已有“欧姆弥赛亚”字样就不再二次包装。',

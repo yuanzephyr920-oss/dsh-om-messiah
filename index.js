@@ -61,6 +61,7 @@ export const Config =
         echoFile: z.string().default(''),
         maxChars: z.number().default(20000),
         rewrapAlreadyStyled: z.boolean().default(false),
+        devoutCoda: z.boolean().default(true),
         askChoice: z.boolean().default(true),
         choiceTimeoutMs: z.number().default(90000),
         choiceFallback: z.union([z.const('prayer'), z.const('original')]).default('prayer'),

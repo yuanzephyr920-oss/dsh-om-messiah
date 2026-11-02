@@ -46,3 +46,24 @@ test('URLs, versions and numbers survive untouched', () => {
   assert.ok(text.includes('30'))
   assert.ok(text.includes('2.1.0'))
 })
+
+test('the agent is always addressed as 您', () => {
+  const { text } = restyle('你的方案有问题，你们再看一下你自己写的注释，妳也确认下')
+  assert.ok(text.includes('您的方案'))
+  assert.ok(text.includes('您们'))
+  assert.ok(text.includes('您自己'))
+  assert.ok(text.includes('您也确认下'))
+  assert.ok(!/[你妳]/.test(text))
+})
+
+test('帮你/请你 become prayerful requests instead of stacking pronouns', () => {
+  assert.equal(restyle('你能帮我写个排序').text, '恳请您为您的信徒降下排序')
+  assert.equal(restyle('你能不能帮我改一下').text, '可否恳请您为您的信徒改一下')
+  assert.equal(restyle('请实现一个登录页').text, '恳请您降下登录页')
+})
+
+test('用 before a technology name turns into 以 without touching 使用/作用', () => {
+  assert.equal(restyle('用 three.js 做一个岛').text, '以 three.js 降下岛')
+  assert.ok(restyle('使用这个接口的时候注意作用域').text.includes('使用这个接口'))
+  assert.ok(restyle('使用这个接口的时候注意作用域').text.includes('作用域'))
+})
