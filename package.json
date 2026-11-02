@@ -1,6 +1,6 @@
 {
   "name": "dsh-om-messiah",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "type": "module",
   "description": "Rewrite every prompt into an Om Messiah prayer before it reaches the model, then choose prayer or original to send. Ships a Settings page.",
   "exports": {
@@ -8,7 +8,7 @@
     "./client": "./client.js",
     "./lib/*.js": "./lib/*.js",
     "./locale/*.json": "./locale/*.json",
-    "./icon": "./icon.svg"
+    "./icon": "./docs/icon.svg"
   },
   "files": [
     "index.js",
@@ -16,7 +16,6 @@
     "lib/*.js",
     "cordis.patch.yml",
     "locale/*.json",
-    "icon.svg",
     "screenshots.json",
     "docs/*.png",
     "docs/*.svg",

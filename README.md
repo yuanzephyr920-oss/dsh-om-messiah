@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="icon.svg" width="88" alt="dsh-om-messiah" />
+<img src="docs/icon.svg" width="88" alt="dsh-om-messiah" />
 
 # 🕯️ dsh-om-messiah
 
@@ -375,9 +375,9 @@ dsh-om-messiah/
 │   ├── choice.js         # 发祷文还是发原文
 │   └── settings-api.js   # 设置页的 Host 半边：读配置 / 校验 / 试改写
 ├── locale/{zh,en}.json
-├── icon.svg
+├── docs/icon.svg          # 唯一图标源（插件图标 + 商店图标共用）
 ├── screenshots.json      # 市场详情页截图（相对路径，1–8 张）
-├── docs/                 # 商店图位：icon-512.png + 三张截图
+├── docs/                 # icon-512.png（由 icon.svg 渲染）+ 三张截图
 ├── scripts/samples.mjs
 └── test/                 # style / guards / prayer / choice / plugin / settings / client
 ```
