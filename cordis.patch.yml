@@ -1,0 +1,19 @@
+- insert:
+    - id: mechanicus
+      name: '@local/dsh-mechanicus'
+      config:
+        enabled: true
+        intensity: medium
+        quoteStyle: quote
+        echo: true
+        echoFile: ''
+        maxChars: 20000
+        rewrapAlreadyStyled: false
+        askChoice: true
+        choiceTimeoutMs: 90000
+        choiceFallback: prayer
+        address: ''
+        selfDesc: ''
+        praise: ''
+        wishLead: ''
+        closing: ''

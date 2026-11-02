@@ -1,0 +1,39 @@
+{
+  "name": "@local/dsh-mechanicus",
+  "version": "1.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Rewrite every user prompt into a Mechanicus prayer before it reaches the model, with its own Settings page.",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./lib/*.js": "./lib/*.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "lib/*.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-ui-settings-plugins"
+      ]
+    }
+  }
+}
