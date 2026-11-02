@@ -1,15 +1,15 @@
 <div align="center">
 
-<img src="icon.svg" width="88" alt="dsh-mechanicus" />
+<img src="icon.svg" width="88" alt="dsh-om-messiah" />
 
-# 🕯️ dsh-mechanicus
+# 🕯️ dsh-om-messiah
 
 **把每一句提示词，先献给万机之神。**
 
 在提示词送达模型之前，把它改写成机械神教／欧姆弥赛亚的祷文；祷文降下之后，再由你决定这一轮发祷文，还是发原文。
 
 <p>
-  <a href="https://www.npmjs.com/package/dsh-mechanicus"><img src="https://img.shields.io/npm/v/dsh-mechanicus?style=flat-square&color=cb3837" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/dsh-om-messiah"><img src="https://img.shields.io/npm/v/dsh-om-messiah?style=flat-square&color=cb3837" alt="npm version" /></a>
   <a href="https://github.com/yuanzephyr920-oss/dsh-mechanicus/stargazers"><img src="https://img.shields.io/github/stars/yuanzephyr920-oss/dsh-mechanicus?style=flat-square&color=d8a657" alt="GitHub stars" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-4c8bf5?style=flat-square" alt="License: MIT" /></a>
   <img src="https://img.shields.io/badge/DSH-0.2%2B-8b5cf6?style=flat-square" alt="DSH 0.2+" />
@@ -87,13 +87,13 @@
 从 npm 装（一次 `plugin add` 就好，不需要在 `allowBuilds` 里点授权）：
 
 ```bash
-dsh plugin --profile desktop add dsh-mechanicus
+dsh plugin --profile desktop add dsh-om-messiah
 ```
 
 刚发布时如果装到的是旧版本（国内镜像同步有几小时延迟），加一次源：
 
 ```bash
-dsh plugin --profile desktop add dsh-mechanicus --registry=https://registry.npmjs.org
+dsh plugin --profile desktop add dsh-om-messiah --registry=https://registry.npmjs.org
 ```
 
 从 GitHub 直接装：
@@ -106,7 +106,7 @@ dsh plugin --profile desktop add https://github.com/yuanzephyr920-oss/dsh-mechan
 
 ```bash
 git clone https://github.com/yuanzephyr920-oss/dsh-mechanicus
-dsh plugin --profile desktop add /path/to/dsh-mechanicus
+dsh plugin --profile desktop add /path/to/dsh-om-messiah
 ```
 
 Windows 上 `dsh` 不在 PATH 时，用安装目录里的 CLI：
@@ -122,14 +122,14 @@ dsh.cmd plugin --profile desktop add https://github.com/yuanzephyr920-oss/dsh-me
 
 ### 3. 确认装好了
 
-- 设置 → 插件：能看到「机械神教祷文改写（dsh-mechanicus）」且已启用；
+- 设置 → 插件：能看到「机械神教祷文改写（dsh-om-messiah）」且已启用；
 - 设置 → 机械神教：本插件自己的页面；
 - 随便发一句话，第一个回答前应该出现选择卡。
 
 卸载：
 
 ```bash
-dsh plugin --profile desktop remove dsh-mechanicus
+dsh plugin --profile desktop remove dsh-om-messiah
 ```
 
 > 装过早期的 `@local/dsh-om-messiah` 的话，先 `remove` 掉再装这个，避免两套包装叠加。
@@ -149,7 +149,7 @@ DSH_MECHANICUS_ECHO=1 dsh.cmd <profile> 用 three.js 做一个海中小岛
 ```
 
 ```text
-[dsh-mechanicus] wrapped (medium): 18 -> 180 chars
+[dsh-om-messiah] wrapped (medium): 18 -> 180 chars
 ----- original -----
 用 three.js 做一个海中小岛
 ----- prayer -----
@@ -275,7 +275,7 @@ closing: 欧姆弥赛亚在上！
 **样式不外溢。** 每条规则都以 `[data-mk-page]` 开头，只作用于本页；不用 `!important`、不写全局标签选择器、
 不改 `html/body`。主题想改圆角可以覆盖 `--mk-radius`（默认 `8px`）；系统要求减少动效时开关动效关闭。
 
-**导航里是并列的一栏。** 用自有 id 注册（`settings.section` / `id: mechanicus` / `order: 41`），不改官方条目。
+**导航里是并列的一栏。** 用自有 id 注册（`settings.section` / `id: om-messiah` / `order: 41`），不改官方条目。
 
 **与同样会碰提示词的插件共存：**
 
@@ -329,7 +329,7 @@ admission → 落盘 user/message → 拼进请求 → 模型
 ## 开发与测试
 
 ```bash
-cd dsh-mechanicus
+cd dsh-om-messiah
 node --test                 # 67 个用例；Node 24 下不要写 `node --test test/`
 node scripts/samples.mjs    # 打印三组改写前后对照（low / medium / high 可选）
 ```
@@ -337,9 +337,9 @@ node scripts/samples.mjs    # 打印三组改写前后对照（low / medium / hi
 文件结构：
 
 ```text
-dsh-mechanicus/
+dsh-om-messiah/
 ├── package.json          # 包名、exports、files、dsh.bundle.patch
-├── cordis.patch.yml      # 挂载点：insert 一个 id=mechanicus 的插件
+├── cordis.patch.yml      # 挂载点：insert 一个 id=om-messiah 的插件
 ├── index.js              # apply()：pre-step 监听、设置页接口、echo 日志
 ├── client.js             # 浏览器半边：设置 → 机械神教
 ├── lib/

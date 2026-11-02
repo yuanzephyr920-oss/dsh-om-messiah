@@ -42,7 +42,7 @@ function asker(label, error) {
     async ask(request) {
       calls.push(request)
       if (error !== undefined) throw error
-      return { answers: [{ id: 'mechanicus-route', selected: [label] }] }
+      return { answers: [{ id: 'om-messiah-route', selected: [label] }] }
     },
   }
 }
@@ -139,7 +139,7 @@ test('echo writes the rewritten text to the host log', async () => {
   await listener({}, async () => enter(userMessage('写一个 Python 快速排序')))
   await settle()
   const joined = logs.join('\n')
-  assert.ok(joined.includes('[dsh-mechanicus] wrapped'))
+  assert.ok(joined.includes('[dsh-om-messiah] wrapped'))
   assert.ok(joined.includes(CALL))
   assert.ok(joined.includes('----- original -----'))
   assert.ok(joined.includes('写一个 Python 快速排序'))

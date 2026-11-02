@@ -40,6 +40,8 @@
           fill="#fff8e2"/>
   </g>
 
-  <!-- halo above the flame -->
-  <ellipse cx="256" cy="196" rx="46" ry="12" fill="none" stroke="#f2d489" stroke-width="5" opacity="0.5"/>
+  <!-- Ω above the flame -->
+  <path d="M228 214v-12a34 34 0 1 1 56 0v12M208 214h32M272 214h32"
+        fill="none" stroke="#f2d489" stroke-width="9"
+        stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

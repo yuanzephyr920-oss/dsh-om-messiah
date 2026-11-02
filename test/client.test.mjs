@@ -51,7 +51,7 @@ async function loadClient() {
 test('client bundle self-registers with the package id', async () => {
   const { bundle } = await loadClient()
   assert.ok(bundle, 'window.__ModuleLoader__.load was not called')
-  assert.equal(bundle.id, 'dsh-mechanicus')
+  assert.equal(bundle.id, 'dsh-om-messiah')
   assert.equal(typeof bundle.factory, 'function')
   const half = bundle.factory((id) => (id === 'react' ? React : undefined))
   assert.equal(typeof half.apply, 'function')
@@ -89,8 +89,8 @@ test('apply registers exactly one settings.section page', async () => {
   assert.equal(registrations.length, 1)
   const { definition, component } = registrations[0]
   assert.equal(definition.name, 'settings.section')
-  assert.equal(definition.id, 'mechanicus')
-  assert.equal(definition.label, '机械神教')
+  assert.equal(definition.id, 'om-messiah')
+  assert.equal(definition.label, '欧姆弥赛亚')
   assert.equal(typeof definition.order, 'number')
   assert.equal(typeof component, 'function')
   assert.ok(style.textContent.includes('[data-mk-page]'))
@@ -160,7 +160,7 @@ test('uses only DSH theme tokens, always with a fallback, so themes restyle the 
 
 test('client uses the same-origin settings API and never hardcodes a key', async () => {
   const source = await readFile(new URL('../client.js', import.meta.url), 'utf8')
-  assert.ok(source.includes("'/api/mechanicus'"))
+  assert.ok(source.includes("'/api/om-messiah'"))
   assert.ok(source.includes('/config'))
   assert.ok(source.includes('/preview'))
   assert.ok(source.includes("credentials: 'same-origin'"))

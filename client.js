@@ -1,5 +1,5 @@
 /**
- * dsh-mechanicus —— 浏览器半端：它在「设置」里的一页
+ * dsh-om-messiah —— 浏览器半端：它在「设置」里的一页
  * ============================================================================
  * client bundle 不是 ESM，是自注册脚本（约定抄自 dsh-bili-scroll）：
  *
@@ -11,24 +11,24 @@
  * 进「设置」的方式：
  *
  *     slots.inject('settings.section', () => slots.register(
- *       { name: 'settings.section', id: 'mechanicus', order: 41, label: '机械神教' },
+ *       { name: 'settings.section', id: 'om-messiah', order: 41, label: '欧姆弥赛亚' },
  *       () => h(Panel),
  *     ))
  *
  * 注意：Client 半读不到也写不了插件 config（Client Service 里没有配置服务），
  * 所以这一页只负责界面，数据走 Host 半的同源路由：
- *   GET  /api/mechanicus/config   当前生效配置
- *   POST /api/mechanicus/config   校验并持久化（Host 用 configEditor）
- *   POST /api/mechanicus/preview  拿一段文字试改写
+ *   GET  /api/om-messiah/config   当前生效配置
+ *   POST /api/om-messiah/config   校验并持久化（Host 用 configEditor）
+ *   POST /api/om-messiah/preview  拿一段文字试改写
  */
 
 window.__ModuleLoader__.load({
-  id: 'dsh-mechanicus',
+  id: 'dsh-om-messiah',
   factory: (require) => {
     const React = require('react')
     const h = React.createElement
 
-    const API = '/api/mechanicus'
+    const API = '/api/om-messiah'
 
     /* 一律看 res.ok：HTTP 500 的 {ok:false,error} 不能被当成"已保存" */
     const asJson = async (res) => {
@@ -451,16 +451,16 @@ window.__ModuleLoader__.load({
       inject: ['slots'],
       apply(ctx) {
         const style = document.createElement('style')
-        style.setAttribute('data-plugin-css', 'dsh-mechanicus')
+        style.setAttribute('data-plugin-css', 'dsh-om-messiah')
         style.textContent = CSS
         document.head.appendChild(style)
-        ctx.effect(() => () => style.remove(), 'dsh-mechanicus: 设置页样式')
+        ctx.effect(() => () => style.remove(), 'dsh-om-messiah: 设置页样式')
 
         const slots = (typeof ctx.get === 'function' ? ctx.get('slots') : undefined) || ctx.slots
         if (!slots) return
         slots.inject('settings.section', () =>
           slots.register(
-            { name: 'settings.section', id: 'mechanicus', order: 41, label: '机械神教' },
+            { name: 'settings.section', id: 'om-messiah', order: 41, label: '欧姆弥赛亚' },
             () => h(Panel),
           ),
         )

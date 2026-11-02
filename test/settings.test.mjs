@@ -13,7 +13,7 @@ import { CALL, CLOSING, PRAISE, WISH_LEAD, buildPrayer, normalizeConfig } from '
 /** A configEditor stand-in with one row for this plugin. */
 function fakeEditor(initial = { intensity: 'medium' }) {
   const row = {
-    options: { id: 'mechanicus', config: { ...initial } },
+    options: { id: 'om-messiah', config: { ...initial } },
   }
   const state = {
     edits: [],
@@ -212,7 +212,7 @@ function postRequest(url, payload) {
   }
 }
 
-test('apply mounts the settings routes under /api/mechanicus', async () => {
+test('apply mounts the settings routes under /api/om-messiah', async () => {
   let route
   const webServer = {
     register(next) {
@@ -224,26 +224,26 @@ test('apply mounts the settings routes under /api/mechanicus', async () => {
   apply(fakeCtx({ webServer, configEditor: editor }), { enabled: true })
 
   assert.equal(route.kind, 'prefix')
-  assert.equal(route.path, '/api/mechanicus')
+  assert.equal(route.path, '/api/om-messiah')
 
   const getRes = fakeResponse()
-  await route.handler({ url: '/api/mechanicus/config', method: 'GET' }, getRes)
+  await route.handler({ url: '/api/om-messiah/config', method: 'GET' }, getRes)
   assert.equal(getRes.out.status, 200)
   assert.equal(JSON.parse(getRes.out.body).config.intensity, 'medium')
 
   const saveRes = fakeResponse()
-  await route.handler(postRequest('/api/mechanicus/config', { intensity: 'high' }), saveRes)
+  await route.handler(postRequest('/api/om-messiah/config', { intensity: 'high' }), saveRes)
   assert.equal(saveRes.out.status, 200)
   assert.equal(JSON.parse(saveRes.out.body).saved.intensity, 'high')
   assert.equal(editor.state.edits.length, 1)
 
   const previewRes = fakeResponse()
-  await route.handler(postRequest('/api/mechanicus/preview', { text: '写一个快速排序' }), previewRes)
+  await route.handler(postRequest('/api/om-messiah/preview', { text: '写一个快速排序' }), previewRes)
   assert.equal(previewRes.out.status, 200)
   assert.ok(JSON.parse(previewRes.out.body).prayer.includes('欧姆弥赛亚'))
 
   const unknownRes = fakeResponse()
-  await route.handler({ url: '/api/mechanicus/nope', method: 'GET' }, unknownRes)
+  await route.handler({ url: '/api/om-messiah/nope', method: 'GET' }, unknownRes)
   assert.equal(unknownRes.out.status, 404)
 })
 

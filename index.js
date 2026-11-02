@@ -1,5 +1,5 @@
 /**
- * dsh-mechanicus — rewrite every user prompt into a Mechanicus prayer before it
+ * dsh-om-messiah — rewrite every user prompt into an Om Messiah prayer before it
  * reaches the model.
  *
  * The interception point is the Host waterfall event `agent/pre-step`: the Agent
@@ -23,7 +23,7 @@ import { classify } from './lib/guards.js'
 import { buildPrayer, normalizeConfig, LITURGY_FIELDS } from './lib/prayer.js'
 import { createSettingsApi, prayerOptions } from './lib/settings-api.js'
 
-export const name = 'mechanicus'
+export const name = 'om-messiah'
 
 /** Load schemastery from the plugin, else from any installed profile. */
 async function loadSchema() {
@@ -76,7 +76,7 @@ export const Config =
 function echoLines(original, rewritten, config, skip) {
   const head = skip !== undefined && skip !== '' ? `skipped (${skip})` : `wrapped (${config.intensity})`
   return [
-    `[dsh-mechanicus] ${head}: ${original.length} -> ${rewritten.length} chars`,
+    `[dsh-om-messiah] ${head}: ${original.length} -> ${rewritten.length} chars`,
     '----- original -----',
     original,
     '----- prayer -----',
@@ -93,7 +93,7 @@ function choiceLine(route, fallback) {
       : route === 'original'
         ? '发送原文'
         : `未作答（按 fallback=${fallback} 发送）`
-  return `[dsh-mechanicus] choice: ${text}`
+  return `[dsh-om-messiah] choice: ${text}`
 }
 
 /**
@@ -115,7 +115,7 @@ function makeEcho(ctx, config) {
         await appendFile(config.echoFile, `${line}\n`, 'utf8')
       } catch (error) {
         try {
-          logger?.warn?.(`[dsh-mechanicus] cannot write echoFile: ${String(error)}`)
+          logger?.warn?.(`[dsh-om-messiah] cannot write echoFile: ${String(error)}`)
         } catch {}
       }
     }
@@ -180,7 +180,7 @@ export function apply(ctx, config) {
   const logger = ctx?.logger
   const warn = (error) => {
     try {
-      logger?.warn?.(`[dsh-mechanicus] ${error instanceof Error ? error.message : String(error)}`)
+      logger?.warn?.(`[dsh-om-messiah] ${error instanceof Error ? error.message : String(error)}`)
     } catch {}
   }
   const echo = makeEcho(ctx, cfg)
@@ -255,7 +255,7 @@ export function apply(ctx, config) {
 
   try {
     logger?.info?.(
-      `[dsh-mechanicus] active: enabled=${cfg.enabled} intensity=${cfg.intensity} quote=${cfg.quoteStyle} echo=${cfg.echo}`,
+      `[dsh-om-messiah] active: enabled=${cfg.enabled} intensity=${cfg.intensity} quote=${cfg.quoteStyle} echo=${cfg.echo}`,
     )
   } catch {}
 }
@@ -312,7 +312,7 @@ function mountSettingsRoutes(ctx, cfg, warn) {
     try {
       const url = new URL(req.url ?? '/', 'http://127.0.0.1')
       const path = url.pathname
-      if (path === '/api/mechanicus/config') {
+      if (path === '/api/om-messiah/config') {
         if (req.method === 'GET') return sendJson(res, 200, api.read())
         if (req.method === 'POST') {
           const body = await readJson(req)
@@ -321,7 +321,7 @@ function mountSettingsRoutes(ctx, cfg, warn) {
         }
         return sendJson(res, 405, { ok: false, error: `不支持 ${req.method}` })
       }
-      if (path === '/api/mechanicus/preview' && req.method === 'POST') {
+      if (path === '/api/om-messiah/preview' && req.method === 'POST') {
         const body = await readJson(req)
         const result = api.preview(body)
         return sendJson(res, result.status, result.body)
@@ -340,10 +340,10 @@ function mountSettingsRoutes(ctx, cfg, warn) {
       () =>
         webServer.register({
           kind: 'prefix',
-          path: '/api/mechanicus',
+          path: '/api/om-messiah',
           handler,
         }),
-      'mechanicus: 设置页接口',
+      'om-messiah: 设置页接口',
     )
   } catch (error) {
     warn(error)

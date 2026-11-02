@@ -1,6 +1,6 @@
 - insert:
-    - id: mechanicus
-      name: 'dsh-mechanicus'
+    - id: om-messiah
+      name: 'dsh-om-messiah'
       config:
         enabled: true
         intensity: medium
