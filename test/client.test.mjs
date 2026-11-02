@@ -51,7 +51,7 @@ async function loadClient() {
 test('client bundle self-registers with the package id', async () => {
   const { bundle } = await loadClient()
   assert.ok(bundle, 'window.__ModuleLoader__.load was not called')
-  assert.equal(bundle.id, '@local/dsh-mechanicus')
+  assert.equal(bundle.id, 'dsh-mechanicus')
   assert.equal(typeof bundle.factory, 'function')
   const half = bundle.factory((id) => (id === 'react' ? React : undefined))
   assert.equal(typeof half.apply, 'function')

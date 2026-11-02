@@ -1,9 +1,8 @@
 {
-  "name": "@local/dsh-mechanicus",
+  "name": "dsh-mechanicus",
   "version": "1.2.0",
-  "private": true,
   "type": "module",
-  "description": "Rewrite every user prompt into a Mechanicus prayer before it reaches the model, with its own Settings page.",
+  "description": "Rewrite every prompt into a Mechanicus prayer before it reaches the model, then choose prayer or original to send. Ships a Settings page.",
   "exports": {
     ".": "./index.js",
     "./client": "./client.js",
@@ -18,7 +17,11 @@
     "cordis.patch.yml",
     "locale/*.json",
     "icon.svg",
-    "README.md"
+    "screenshots.json",
+    "docs/*.png",
+    "docs/*.svg",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "test": "node --test"
@@ -35,5 +38,30 @@
         "@deepseek-ai/dsh-client-ui-settings-plugins"
       ]
     }
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "prompt",
+    "prayer",
+    "mechanicus",
+    "om-messiah"
+  ],
+  "author": "yuanzephyr920-oss",
+  "license": "MIT",
+  "homepage": "https://github.com/yuanzephyr920-oss/dsh-mechanicus#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuanzephyr920-oss/dsh-mechanicus.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yuanzephyr920-oss/dsh-mechanicus/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

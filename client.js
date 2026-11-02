@@ -23,7 +23,7 @@
  */
 
 window.__ModuleLoader__.load({
-  id: '@local/dsh-mechanicus',
+  id: 'dsh-mechanicus',
   factory: (require) => {
     const React = require('react')
     const h = React.createElement

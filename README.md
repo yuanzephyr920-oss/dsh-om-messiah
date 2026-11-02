@@ -52,6 +52,13 @@
           欧姆弥赛亚在上！
 ```
 
+![祷文与回答](docs/screenshot-chat.png)
+
+<p align="center">
+  <img src="docs/screenshot-choice.png" width="49%" alt="发送前二选一" />
+  <img src="docs/screenshot-settings.png" width="49%" alt="设置 → 机械神教" />
+</p>
+
 **改写只发生在「送往模型」的那一层**：请求内容变了，会话里看到的也是改写后的文本（方便你随时核对），
 而你的原始草稿、斜杠命令、附件、代码块里的每一个字节都不动。
 
@@ -75,6 +82,12 @@
 **要求**：DeepSeek Harness 0.2 及以上（`agent/pre-step` 与 `userQuestions` 是这一版起稳定的宿主契约）。
 
 ### 1. 安装
+
+从 npm 装（一次 `plugin add` 就好，不需要在 `allowBuilds` 里点授权）：
+
+```bash
+dsh plugin --profile desktop add dsh-mechanicus
+```
 
 从 GitHub 直接装：
 
@@ -109,7 +122,7 @@ dsh.cmd plugin --profile desktop add https://github.com/yuanzephyr920-oss/dsh-me
 卸载：
 
 ```bash
-dsh plugin --profile desktop remove @local/dsh-mechanicus
+dsh plugin --profile desktop remove dsh-mechanicus
 ```
 
 > 装过早期的 `@local/dsh-om-messiah` 的话，先 `remove` 掉再装这个，避免两套包装叠加。
@@ -330,6 +343,8 @@ dsh-mechanicus/
 │   └── settings-api.js   # 设置页的 Host 半边：读配置 / 校验 / 试改写
 ├── locale/{zh,en}.json
 ├── icon.svg
+├── screenshots.json      # 市场详情页截图（相对路径，1–8 张）
+├── docs/                 # 商店图位：icon-512.png + 三张截图
 ├── scripts/samples.mjs
 └── test/                 # style / guards / prayer / choice / plugin / settings / client
 ```

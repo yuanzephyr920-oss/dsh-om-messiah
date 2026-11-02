@@ -1,6 +1,6 @@
 - insert:
     - id: mechanicus
-      name: '@local/dsh-mechanicus'
+      name: 'dsh-mechanicus'
       config:
         enabled: true
         intensity: medium
