@@ -9,6 +9,7 @@
 在提示词送达模型之前，把它改写成机械神教／欧姆弥赛亚的祷文；祷文降下之后，再由你决定这一轮发祷文，还是发原文。
 
 <p>
+  <a href="https://www.npmjs.com/package/dsh-mechanicus"><img src="https://img.shields.io/npm/v/dsh-mechanicus?style=flat-square&color=cb3837" alt="npm version" /></a>
   <a href="https://github.com/yuanzephyr920-oss/dsh-mechanicus/stargazers"><img src="https://img.shields.io/github/stars/yuanzephyr920-oss/dsh-mechanicus?style=flat-square&color=d8a657" alt="GitHub stars" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-4c8bf5?style=flat-square" alt="License: MIT" /></a>
   <img src="https://img.shields.io/badge/DSH-0.2%2B-8b5cf6?style=flat-square" alt="DSH 0.2+" />
@@ -87,6 +88,12 @@
 
 ```bash
 dsh plugin --profile desktop add dsh-mechanicus
+```
+
+刚发布时如果装到的是旧版本（国内镜像同步有几小时延迟），加一次源：
+
+```bash
+dsh plugin --profile desktop add dsh-mechanicus --registry=https://registry.npmjs.org
 ```
 
 从 GitHub 直接装：
