@@ -178,12 +178,15 @@ test('an unanswerable question falls back to the configured route', async () => 
   }
 })
 
-test('without a settings UI the question is skipped', async () => {
+test('a late webServer never suppresses the question', async () => {
+  // The Host may expose `webServer` only after this plugin applies; the card
+  // depends on the answerer service, not on the web server (issue #1).
   const questions = asker('发送原文')
   const { listener } = harness({ echo: false, choiceFallback: 'prayer' }, { userQuestions: questions })
-  const decision = await listener({ agent: { id: 's' } }, async () => enter(userMessage('写一个 Python 快速排序')))
-  assert.equal(questions.calls.length, 0)
-  assert.ok(decision.messages[0].content[0].text.startsWith(CALL))
+  const original = enter(userMessage('写一个 Python 快速排序'))
+  const decision = await listener({ agent: { id: 's' } }, async () => original)
+  assert.equal(questions.calls.length, 1)
+  assert.equal(decision, original)
 })
 
 test('without the userQuestions service the fallback applies', async () => {

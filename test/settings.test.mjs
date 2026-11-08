@@ -253,6 +253,87 @@ test('apply skips route mounting when the profile has no webServer', () => {
   assert.doesNotThrow(() => apply(fakeCtx({ webServer: {} }), { enabled: true }))
 })
 
+/** A ctx whose `webServer`/`configEditor` activate only after apply(). */
+function lateCtx() {
+  const services = new Map()
+  const injections = []
+  return {
+    services,
+    injections,
+    logger: { info() {}, warn() {} },
+    on() {},
+    effect(fn) {
+      return fn()
+    },
+    get(key) {
+      return services.get(key)
+    },
+    inject(deps, callback) {
+      injections.push(deps)
+      // cordis re-runs this callback once the deps are active; emulate that by
+      // handing it a scoped ctx that reads the same late-bound map.
+      callback({
+        get: (key) => services.get(key),
+        effect: (fn) => fn(),
+      })
+    },
+  }
+}
+
+test('apply waits for webServer and mounts when it activates later', async () => {
+  const ctx = lateCtx()
+  apply(ctx, { enabled: true })
+
+  assert.deepEqual(ctx.injections, [['webServer']])
+  assert.equal(ctx.services.has('webServer'), false)
+
+  // The service shows up after apply() returned — the route must still mount.
+  let route
+  ctx.services.set('webServer', {
+    register(next) {
+      route = next
+      return () => {
+        route = undefined
+      }
+    },
+  })
+  // cordis calls the inject callback again when the dep activates; here the
+  // callback already ran once against an empty map, so simulate the re-run.
+  ctx.injections.length = 0
+  apply(ctx, { enabled: true })
+  assert.equal(route?.path, '/api/om-messiah')
+  assert.equal(route.kind, 'prefix')
+})
+
+test('settings save resolves configEditor per request, not at mount time', async () => {
+  const ctx = lateCtx()
+  let route
+  ctx.services.set('webServer', {
+    register(next) {
+      route = next
+      return () => {}
+    },
+  })
+  apply(ctx, { enabled: true })
+
+  // No configEditor yet: reading still works, saving explains why it cannot.
+  const beforeRes = fakeResponse()
+  await route.handler({ url: '/api/om-messiah/config', method: 'GET' }, beforeRes)
+  assert.equal(beforeRes.out.status, 200)
+
+  const noEditorRes = fakeResponse()
+  await route.handler(postRequest('/api/om-messiah/config', { intensity: 'high' }), noEditorRes)
+  assert.equal(noEditorRes.out.status, 501)
+
+  // It activates later: the same mounted handler must now persist.
+  const editor = fakeEditor({ intensity: 'medium' })
+  ctx.services.set('configEditor', editor)
+  const saveRes = fakeResponse()
+  await route.handler(postRequest('/api/om-messiah/config', { intensity: 'high' }), saveRes)
+  assert.equal(saveRes.out.status, 200)
+  assert.equal(editor.state.edits.length, 1)
+})
+
 test('the confirmation settings round-trip through the patch', () => {
   const { patch, rejected } = sanitizePatch({
     askChoice: false,

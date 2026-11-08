@@ -187,22 +187,16 @@ export function apply(ctx, config) {
   const echo = makeEcho(ctx, cfg)
 
   // Optional Host services. `get()` is the tolerant accessor; a headless
-  // profile has neither of these and must keep rewriting prompts.
-  const service = (key) => {
-    try {
-      if (typeof ctx?.get === 'function') return ctx.get(key)
-      return ctx?.[key]
-    } catch {
-      return undefined
-    }
-  }
-  const userQuestions = service('userQuestions')
-  const hasWebServer = service('webServer') !== undefined
+  // profile may have neither and must keep rewriting prompts.
+  const userQuestions = readService(ctx, 'userQuestions')
 
   /** Ask which text this turn sends; never throws, never blocks forever. */
   const chooseRoute = async (payload) => {
     const fallback = fallbackRoute(cfg.choiceFallback)
-    if (!hasWebServer) {
+    // The card needs an answerer (`userQuestions`), not a web server: a profile
+    // can have a UI and still expose the service a tick later, so never gate on
+    // `webServer` being present at apply() time.
+    if (userQuestions === undefined) {
       echo(choiceLine('no-settings-ui', fallback)).catch(warn)
       return fallback
     }
@@ -264,6 +258,21 @@ export function apply(ctx, config) {
 /** Largest settings request body we are willing to parse. */
 const MAX_BODY = 64 * 1024
 
+/**
+ * Read an optional Host service without throwing.
+ *
+ * `ctx.get(key)` answers `undefined` both when the service does not exist and
+ * when it exists but is not active yet — callers must not treat that as final.
+ */
+function readService(host, key) {
+  try {
+    if (typeof host?.get === 'function') return host.get(key)
+    return host?.[key]
+  } catch {
+    return undefined
+  }
+}
+
 /** Read a JSON body, or `{}` when the request has none. */
 async function readJson(req) {
   const chunks = []
@@ -295,19 +304,19 @@ function sendJson(res, status, body) {
  *
  * Both services are optional: a headless profile has no `webServer` and no
  * `configEditor`, and the plugin must keep rewriting prompts there.
+ *
+ * `apply()` also runs before the Host's web server is necessarily active, and
+ * `ctx.get('webServer')` then answers `undefined` for a service that will exist
+ * a moment later. Checking once and giving up would silently drop the routes
+ * for the whole process (issue #1: the settings page got HTTP 404 while
+ * `GET /api/om-messiah/config` was never registered). So wait for the service
+ * with `ctx.inject`, and resolve `configEditor` per request as well.
  */
 function mountSettingsRoutes(ctx, cfg, warn) {
-  let webServer
-  try {
-    webServer = typeof ctx?.get === 'function' ? ctx.get('webServer') : ctx?.webServer
-  } catch {}
-  if (webServer === undefined || typeof webServer.register !== 'function') return
-
-  let configEditor
-  try {
-    configEditor = typeof ctx?.get === 'function' ? ctx.get('configEditor') : ctx?.configEditor
-  } catch {}
-  const api = createSettingsApi({ config: cfg, configEditor })
+  const api = createSettingsApi({
+    config: cfg,
+    getConfigEditor: () => readService(ctx, 'configEditor'),
+  })
 
   const handler = async (req, res) => {
     try {
@@ -336,17 +345,42 @@ function mountSettingsRoutes(ctx, cfg, warn) {
     }
   }
 
-  try {
-    ctx.effect(
-      () =>
-        webServer.register({
-          kind: 'prefix',
-          path: '/api/om-messiah',
-          handler,
-        }),
-      'om-messiah: 设置页接口',
-    )
-  } catch (error) {
-    warn(error)
+  const route = { kind: 'prefix', path: '/api/om-messiah', handler }
+
+  /** @returns {boolean} whether the route is now mounted on that server. */
+  const mount = (webServer) => {
+    if (webServer === undefined || webServer === null || typeof webServer.register !== 'function') {
+      return false
+    }
+    try {
+      webServer.register(route)
+      return true
+    } catch (error) {
+      warn(error)
+      return false
+    }
   }
+
+  // Wait for `webServer` to activate, then register inside an effect so the
+  // route disappears again when this plugin unloads.
+  if (typeof ctx?.inject === 'function' && typeof ctx?.effect === 'function') {
+    try {
+      ctx.inject(['webServer'], (scoped) => {
+        scoped.effect(() => {
+          const webServer = readService(scoped, 'webServer')
+          if (webServer === undefined || webServer === null || typeof webServer.register !== 'function') {
+            return () => {}
+          }
+          const dispose = webServer.register(route)
+          return typeof dispose === 'function' ? dispose : () => {}
+        }, 'om-messiah: 设置页接口')
+      })
+      return
+    } catch (error) {
+      warn(error)
+    }
+  }
+
+  // Hosts without `inject`: mount right away if the service happens to be up.
+  mount(readService(ctx, 'webServer'))
 }

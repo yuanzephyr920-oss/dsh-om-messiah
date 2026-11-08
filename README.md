@@ -445,6 +445,12 @@ dsh mechtest 写一个Python快速排序    # 没有模型凭据也没关系，�
 </details>
 
 <details>
+<summary><b>设置页显示「读取失败：HTTP 404」？</b></summary>
+
+1.4.4 之前有这个 bug：`apply()` 只在启动那一刻查一次 `webServer`，宿主还没来得及激活该服务时路由就被永久跳过（[issue #1](https://github.com/yuanzephyr920-oss/dsh-om-messiah/issues/1)）。1.4.4 起改用 `ctx.inject(['webServer'])` 延迟注册，`configEditor` 也改成每次请求时再取。升级并重启 DeepSeek Harness 后，`GET /api/om-messiah/config` 应为 200。
+</details>
+
+<details>
 <summary><b>会在日志里泄露密钥吗？</b></summary>
 
 不会。插件只处理用户文本，不读环境变量、不读凭据；`echo` 打印的就是改写前后的文本，且经过脱敏。
@@ -475,6 +481,8 @@ dsh mechtest 写一个Python快速排序    # 没有模型凭据也没关系，�
 
 | 版本 | 变化 |
 | --- | --- |
+| 1.4.4 | 修 issue #1：设置页 `HTTP 404`（`apply()` 早于 `webServer` 激活就永久跳过路由）；改用 `ctx.inject` 延迟注册 + `configEditor` 惰性解析 |
+| 1.4.3 | README 重做（中英双语、截图、FAQ），补 `README.en.md` |
 | 1.4.2 | 修复设置页 `toggle is not defined` 导致整页空白；补「已加载配置」渲染测试（73 用例） |
 | 1.4.1 | 图标统一到 `docs/icon.svg`；插件 export 与商店 PNG 同源 |
 | 1.4.0 | 「你」→「您」；语气更贴近范本；`devoutCoda` 收束句 |
